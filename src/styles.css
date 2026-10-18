@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "leaflet/dist/leaflet.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -417,6 +418,10 @@
 @media (min-width: 1280px) {
   .property-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+@media (min-width: 1024px) {
+  .listings-layout { grid-template-columns: 280px minmax(0, 1fr); gap: 36px; }
+  .filter-sidebar { position: sticky; top: 100px; align-self: flex-start; max-height: calc(100vh - 100px); overflow-y: auto; overscroll-behavior: contain; padding-right: 8px; scrollbar-gutter: stable; }
+}
 @media (max-width: 1100px) {
   .property-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .listings-layout { grid-template-columns: 205px minmax(0, 1fr); gap: 25px; }
@@ -427,6 +432,10 @@
   .trust-strip { padding-top: 155px; }
   .lead-layout, .testimonial-layout { gap: 42px; }
   .neighborhood-card { padding-inline: 10px; gap: 8px; }
+}
+@media (max-width: 1023px) {
+  .filter-sidebar { display: none; }
+  .mobile-filter-button { display: inline-flex !important; }
 }
 @media (max-width: 767px) {
   html { scroll-padding-top: 68px; }
@@ -502,8 +511,8 @@
   .property-tags { gap: 4px; padding: 8px 0; }
   .property-tags span { padding: 3px 5px; font-size: 8px; }
   .quick-view-link { margin-top: auto; padding-block: 8px !important; font-size: 10px !important; }
-  .property-card-list { grid-template-columns: 40% 1fr; }
-  .property-card-list .property-photo-wrap { min-height: 235px; }
+  .property-card-list { display: grid; grid-template-columns: 1fr; }
+  .property-card-list .property-photo-wrap { width: 100%; height: auto; min-height: 0; aspect-ratio: 4 / 3; }
   .property-card-list .property-content { padding: 12px 10px 0; }
   .property-card-list .property-content h3 { font-size: 12px; }
   .active-chips { gap: 5px; }
