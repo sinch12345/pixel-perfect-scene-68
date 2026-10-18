@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
-import { CircleMarker, MapContainer, Popup, TileLayer } from "react-leaflet";
+import { useEffect, useMemo, useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import type { Property } from "@/data/properties";
 import { formatPrice } from "@/data/properties";
 import { Button } from "@/components/ui/button";
@@ -12,20 +11,35 @@ type PropertyMapProps = {
   onQuickView: (property: Property) => void;
 };
 
-const labelIcon = (price: string) =>
+const formatMapPrice = (price: number) =>
+  price >= 1_000_000 ? `$${(price / 1_000_000).toFixed(1)}m` : `$${Math.round(price / 1_000)}k`;
+
+const labelIcon = (price: number) =>
   L.divIcon({
     className: "nestora-map-marker",
-    html: `<span>${price}</span>`,
+    html: `<span>${formatMapPrice(price)}</span>`,
     iconSize: [90, 32],
     iconAnchor: [45, 16],
   });
 
 const areaCenters = [
-  { name: "Lakeside", position: [41.409, -70.61] as [number, number], fill: "#0f766e" },
-  { name: "Old Town", position: [41.427, -70.626] as [number, number], fill: "#f59e0b" },
-  { name: "Hillcrest", position: [41.442, -70.593] as [number, number], fill: "#0f766e" },
-  { name: "Harbour", position: [41.398, -70.638] as [number, number], fill: "#f59e0b" },
+  { name: "Lakeside", position: [41.409, -70.61] as [number, number], fill: "var(--primary)" },
+  { name: "Old Town", position: [41.427, -70.626] as [number, number], fill: "var(--accent)" },
+  { name: "Hillcrest", position: [41.442, -70.593] as [number, number], fill: "var(--primary)" },
+  { name: "Harbour", position: [41.398, -70.638] as [number, number], fill: "var(--accent)" },
 ];
+
+function FitListings({ listings }: { listings: Property[] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (listings.length === 0) return;
+    const bounds = L.latLngBounds(listings.map((property) => [property.latitude, property.longitude]));
+    map.fitBounds(bounds, { padding: [44, 44], maxZoom: 14, animate: false });
+  }, [listings, map]);
+
+  return null;
+}
 
 export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
   const [heatmap, setHeatmap] = useState(false);
@@ -36,6 +50,13 @@ export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
       return { ...area, count: homes.length, average };
     }),
     [listings],
+  );
+  const initialBounds = useMemo(
+    () => listings.length > 0
+      ? L.latLngBounds(listings.map((property) => [property.latitude, property.longitude]))
+      : undefined,
+    // MapContainer uses bounds only on its first render; FitListings handles updates.
+    [],
   );
 
   return (
@@ -48,18 +69,17 @@ export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
           <Layers3 /> Price areas
         </Button>
       </div>
-      <MapContainer center={[41.419, -70.617]} zoom={13} scrollWheelZoom={false} className="h-[480px] w-full">
+      <MapContainer center={[41.419, -70.617]} bounds={initialBounds} boundsOptions={{ padding: [44, 44] }} zoom={13} scrollWheelZoom={false} className="h-[480px] w-full">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <FitListings listings={listings} />
         {!heatmap && listings.map((property) => (
-          <CircleMarker
+          <Marker
             key={property.id}
             center={[property.latitude, property.longitude]}
-            radius={8}
-            pathOptions={{ color: "#ffffff", fillColor: "#0f766e", fillOpacity: 1, weight: 3 }}
-            eventHandlers={{}}
+            icon={labelIcon(property.price)}
           >
             <Popup>
               <div className="w-52 overflow-hidden rounded-lg">
@@ -69,7 +89,7 @@ export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
                 <Button size="sm" className="w-full" onClick={() => onQuickView(property)}>Quick view</Button>
               </div>
             </Popup>
-          </CircleMarker>
+          </Marker>
         ))}
         {heatmap && neighborhoodStats.map((area) => (
           <CircleMarker

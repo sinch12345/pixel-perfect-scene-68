@@ -1,3 +1,4 @@
-- [ ] Replace the starter home page with the Nestora marketplace and metadata.
-- [ ] Add typed property data and all requested browsing and enquiry interactions.
-- [ ] Validate the page, primary interactions, and project checks.
+- [x] Replace the starter home page with the Nestora marketplace and metadata.
+- [x] Add typed property data and requested browsing and enquiry interactions.
+- [ ] Fix desktop sticky filters, grid/list card sizing, and verify the filtered Leaflet map.
+- [ ] Validate the page, primary interactions, tests, and project checks.
