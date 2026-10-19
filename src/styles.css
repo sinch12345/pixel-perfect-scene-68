@@ -600,3 +600,6 @@
   .reveal { opacity: 1; transform: none; }
   .property-card:hover, .why-card:hover { transform: none; }
 }
+
+/* List view: always one card per row (overrides the responsive 2/3-column grid rules above) */
+.property-grid.property-grid-list { grid-template-columns: 1fr; }
