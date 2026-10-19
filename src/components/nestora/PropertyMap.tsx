@@ -33,8 +33,9 @@ function FitListings({ listings }: { listings: Property[] }) {
   const map = useMap();
 
   useEffect(() => {
-    if (listings.length === 0) return;
-    const bounds = L.latLngBounds(listings.map((property) => [property.latitude, property.longitude]));
+    const valid = listings.filter((p) => Number.isFinite(p.latitude) && Number.isFinite(p.longitude));
+    if (valid.length === 0) return;
+    const bounds = L.latLngBounds(valid.map((property) => [property.latitude, property.longitude]));
     map.invalidateSize();
     map.fitBounds(bounds, { paddingTopLeft: [60, 70], paddingBottomRight: [60, 45], maxZoom: 14, animate: false });
   }, [listings, map]);
@@ -69,7 +70,7 @@ export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FitListings listings={listings} />
-        {!heatmap && listings.map((property) => (
+        {!heatmap && listings.filter((p) => Number.isFinite(p.latitude) && Number.isFinite(p.longitude)).map((property) => (
           <Marker
             key={property.id}
             position={[property.latitude, property.longitude]}

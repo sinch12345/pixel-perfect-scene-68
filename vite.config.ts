@@ -12,4 +12,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    resolve: { dedupe: ["leaflet"] },
+    optimizeDeps: { include: ["leaflet", "react-leaflet"] },
+  },
 });
