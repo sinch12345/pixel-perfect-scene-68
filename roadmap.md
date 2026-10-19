@@ -1,6 +1,6 @@
 - [x] Replace the starter home page with the Nestora marketplace and metadata.
 - [x] Add typed property data and requested browsing and enquiry interactions.
-- [ ] Fix the desktop 280px sticky filter column with viewport scrolling and the mobile bottom sheet.
-- [ ] Fix 4:3 grid/list image sizing, mobile stacking, and stable view switching without cropping.
-- [ ] Finish the real Leaflet map with eight price markers, filtered bounds, heatmap, and quick-view popups.
-- [ ] Validate the page, primary interactions, tests, and project checks.
+- [x] Fix the desktop 280px sticky filter column with viewport scrolling and the mobile bottom sheet.
+- [x] Fix 4:3 grid/list image sizing, mobile stacking, and stable view switching without cropping.
+- [x] Finish the real Leaflet map with eight price markers, filtered bounds, heatmap, and quick-view popups.
+- [x] Validate the page, primary interactions, tests, and project checks.
