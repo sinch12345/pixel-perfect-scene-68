@@ -107,4 +107,12 @@ The scope is not identical. Task 1 had more pages and unique features, while Tas
 
 ## 7. Conclusion
 
-AI generation is excellent for a fast, polished first draft and for exploring a new design direction, and it handled accessibility and layout stability well. It was weaker on mobile performance, code organisation and following structural instructions (the component split, the sidebar and the list view). The most effective workflow was **hybrid**: let the AI generate the layout, then audit it and fix the gaps by hand. Fixing the last issue by hand took 15 minutes and no credits, whereas waiting for AI credits would have taken a day.
+**Verdict.** For this project, the hand-coded build was the better finished product, while the AI-generated build was the better starting point. Neither approach won outright, because each was better at different things.
+
+**Where the AI build (Lovable) was better.** It produced a complete, responsive, styled layout in about 10 minutes, compared with about 8 hours of hand-coding. It let me change the whole visual identity from a single prompt, and it delivered conversion-focused components out of the box: a quick-view modal, sticky filters, a validated lead form, testimonials and a real Leaflet map. It also gave much better desktop layout stability (CLS 0.004 against 0.105).
+
+**Where the hand-coded build was better.** It was faster on mobile (Lighthouse performance 85 against 65) because it ships no JavaScript framework and splits the site across separate pages. Its code is cleaner and easier to maintain, with zero dependencies and a predictable structure, whereas the AI build brought 76 dependencies, a monolithic component file and leftover template code. It also gave complete control, with no credit limits and no surprises.
+
+**Where they were about equal.** Desktop performance was the same (91 each), and accessibility was very close (97 against 95 on mobile, 97 against 100 on desktop). Speed to a finished, verified product was also roughly even, because auditing the AI output, recovering from a broken build and hand-fixing bugs took about 6 hours in total.
+
+**Recommendation.** The most effective workflow was hybrid: let the AI generate the layout, then audit it and fix the gaps by hand. Fixing the last issue by hand took 15 minutes and no credits, whereas waiting for AI credits would have taken a day. For a production property site, I would use AI to explore and draft, then hand-refine for performance and code quality.
