@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep the Nestora page in small domain-specific sections under `src/components/nestora` and its typed mock listings in `src/data` so the route composes presentation while reusable listing facts remain separate.
+- Render Leaflet only through a lazy import inside ClientOnly, with its stylesheet imported in the global CSS import block, so server rendering stays browser-safe and map tiles retain their positioning.
