@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import type { Property } from "@/data/properties";
 import { formatPrice } from "@/data/properties";
@@ -35,7 +35,8 @@ function FitListings({ listings }: { listings: Property[] }) {
   useEffect(() => {
     if (listings.length === 0) return;
     const bounds = L.latLngBounds(listings.map((property) => [property.latitude, property.longitude]));
-    map.fitBounds(bounds, { padding: [44, 44], maxZoom: 14, animate: false });
+    map.invalidateSize();
+    map.fitBounds(bounds, { paddingTopLeft: [60, 70], paddingBottomRight: [60, 45], maxZoom: 14, animate: false });
   }, [listings, map]);
 
   return null;
@@ -51,13 +52,6 @@ export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
     }),
     [listings],
   );
-  const initialBounds = useMemo(
-    () => listings.length > 0
-      ? L.latLngBounds(listings.map((property) => [property.latitude, property.longitude]))
-      : undefined,
-    // MapContainer uses bounds only on its first render; FitListings handles updates.
-    [],
-  );
 
   return (
     <div className="relative isolate overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface shadow-card">
@@ -69,7 +63,7 @@ export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
           <Layers3 /> Price areas
         </Button>
       </div>
-      <MapContainer center={[41.419, -70.617]} bounds={initialBounds} boundsOptions={{ padding: [44, 44] }} zoom={13} scrollWheelZoom={false} className="h-[480px] w-full">
+      <MapContainer center={[41.419, -70.617]} zoom={13} scrollWheelZoom={false} className="h-[480px] w-full">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -78,12 +72,13 @@ export function PropertyMap({ listings, onQuickView }: PropertyMapProps) {
         {!heatmap && listings.map((property) => (
           <Marker
             key={property.id}
-            center={[property.latitude, property.longitude]}
+            position={[property.latitude, property.longitude]}
+            title={`${property.name} — ${formatPrice(property.price)}`}
             icon={labelIcon(property.price)}
           >
             <Popup>
               <div className="w-52 overflow-hidden rounded-lg">
-                <img src={property.images[0]} alt={property.name} className="mb-2 h-24 w-full rounded-md object-cover" />
+                <img src={property.images[0]} alt={property.name} width={208} height={96} loading="lazy" className="mb-2 h-24 w-full rounded-md object-cover" />
                 <p className="font-display text-sm font-bold">{property.name}</p>
                 <p className="mb-2 text-sm font-semibold text-primary">{formatPrice(property.price)}</p>
                 <Button size="sm" className="w-full" onClick={() => onQuickView(property)}>Quick view</Button>
